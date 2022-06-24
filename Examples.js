@@ -1870,3 +1870,18 @@ export default (object, keys, data) => {
 };
 // END
  */
+
+/*
+// функция глубокого или полного копирования объекта с использованием рекурсии
+const cloneDeep = (object) => {
+    const clonedObject = {};
+    for (const [key, value] of Object.entries(object)) {
+        if (isObject(value)) {
+            clonedObject[key] = cloneDeep(value);
+        } else {
+            clonedObject[key] = value;
+        }
+    }
+    return clonedObject;
+}
+ */
