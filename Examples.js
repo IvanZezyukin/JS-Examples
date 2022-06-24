@@ -1859,3 +1859,14 @@ const getValue = (data, keys) => {
 }
 console.log(getValue(data, [null]));
  */
+
+/*
+// Добавить в объект данные из другого объекта по списку ключей
+import _ from 'lodash';
+// BEGIN
+export default (object, keys, data) => {
+    const filteredData = keys.length > 0 ? _.pick(data, keys) : data;
+    Object.assign(object, filteredData);
+};
+// END
+ */
