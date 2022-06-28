@@ -1952,3 +1952,35 @@ const groupBy = (arr, key) => {
 };
 console.log(groupBy(students, 'class'));
  */
+
+/*
+// подсчет количества емейлов на бесплатных доменах
+const emails = [
+    'info@gmail.com',
+    'info@yandex.ru',
+    'info@hotmail.com',
+    'mk@host.com',
+    'support@hexlet.io',
+    'key@yandex.ru',
+    'sergey@gmail.com',
+    'vovan@gmail.com',
+    'vovan@hotmail.com',
+    'ivan@yahoo.com',
+];
+const freeEmailDomains = [
+    'gmail.com',
+    'yandex.ru',
+    'hotmail.com',
+    'yahoo.com',
+];
+const getFreeDomainsCount = (emails) => {
+    return freeEmailDomains.reduce((acc, freeEmail) => {
+        const count = emails.filter((email) => email.includes(freeEmail)).length;
+        if (count > 0) {
+            acc[freeEmail] = count;
+        }
+        return acc;
+    }, {});
+};
+console.log(getFreeDomainsCount(emails));
+ */
