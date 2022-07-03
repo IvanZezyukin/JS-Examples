@@ -1984,3 +1984,24 @@ const getFreeDomainsCount = (emails) => {
 };
 console.log(getFreeDomainsCount(emails));
  */
+
+/*
+// получение элементов с первого уровня дерева
+const tree1 = [[1, [3, 2]], 2, { a: 1 }, [3, 5], 2];
+const result = tree1.reduce((acc, item) => {
+    if (item.length !== undefined) {
+        for (const x of item) {
+            acc.push(x);
+        }
+    }
+    return acc;
+}, []);
+console.log('Result:');
+console.log(result); // [1, [3, 2], 3, 5]
+
+// решение учителя
+export default (tree) => {
+    const nodes = tree.filter(Array.isArray);
+    return nodes.flat();
+};
+ */
