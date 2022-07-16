@@ -2005,3 +2005,118 @@ export default (tree) => {
     return nodes.flat();
 };
  */
+
+/*
+// функция глубокого или полного копирования объекта с использованием рекурсии
+const cloneDeep = (object) => {
+    const clonedObject = {};
+    for (const [key, value] of Object.entries(object)) {
+        if (isObject(value)) {
+            clonedObject[key] = cloneDeep(value);
+        } else {
+            clonedObject[key] = value;
+        }
+    }
+    return clonedObject;
+}
+ */
+
+/*
+// ниже реализация сравнения файлов из проекта 2 хекслета с рекурсиями
+import fs from 'fs';
+
+const file1 = fs.readFileSync('./__fixtures__/file1.json', 'utf8');
+const file2 = fs.readFileSync('./__fixtures__/file2.json', 'utf8');
+const file21 = fs.readFileSync('./__fixtures__/file2-1.json', 'utf8');
+const file22 = fs.readFileSync('./__fixtures__/file2-2.json', 'utf8');
+const parsed1 = JSON.parse(file1);
+const parsed2 = JSON.parse(file2);
+const parsed21 = JSON.parse(file21);
+const parsed22 = JSON.parse(file22);
+
+// формируем нужную нам структуру
+const makeStructure = (obj, path = '') => {
+  const result = [];
+  Object.entries(obj).map(([key, value]) => {
+    if (typeof value !== 'object'|| value === null) {
+      result.push({path: path, key: key, value: value});
+    } else {
+      result.push({path: path, key: key, value: makeStructure(value, path + key)});
+    }
+  });
+  return result;
+}
+const structure1 = makeStructure(parsed21);
+const structure2 = makeStructure(parsed22);
+
+const newDiff = (obj1, obj2) => {
+  const result = [];
+  Object.entries(obj1).map(([key, value]) => {
+    let prefix = '';
+    // логика для значения, внутри которого не объект
+    if (typeof value !== 'object' || value === null) {
+      // проверка, что есть точно такой же ключ и значение во втором объекте
+      if (key in obj2) {
+        if (value === obj2[key]) {
+          result.push({prefix: '    ', key: key, value: value});
+        } else {
+          // проверка что есть такой же ключ но значение по ключу не равно
+          result.push({prefix: '  - ', key: key, value: value});
+          // TODO разобраться с преобразованием в текст, тк падало на null
+          result.push({prefix: '  + ', key: key, value: String(obj2[key])});
+        }
+      }
+      // проверка, что ключ удален во втором объекте
+      if (!(key in obj2)) {
+        result.push({prefix: '  - ', key: key, value: value});
+      }
+    } else {
+      // ниже логика для значений, внутри которых содержится объект
+      if (key in obj2) {
+        if (typeof obj2[key] === 'object') {
+          result.push({prefix: '    ', key: key, value: newDiff(value, obj2[key])});
+        } else {
+          // что делаем если в первом объект, а во втором не объект
+          result.push({prefix: '  - ', key: key, value: newDiff(value, value)});
+          result.push({prefix: '  + ', key: key, value: obj2[key]});
+        }
+      }
+      // если ключ удален
+      if (!(key in obj2)) {
+        result.push({prefix: '  - ', key: key, value: newDiff(value, value)});
+      }
+    }
+  });
+  // проверка на новые ключи
+  Object.entries(obj2).map(([key, value]) => {
+    if (!(key in obj1)) {
+      if (typeof value === 'object') {
+        result.push({prefix: '  + ', key: key, value: newDiff(value, value)});
+      } else {
+        result.push({prefix: '  + ', key: key, value: value});
+      }
+    }
+  })
+  return result;
+}
+//console.log(newDiff(parsed21, parsed22));
+
+const arrOfDiff = newDiff(parsed21, parsed22);
+
+const stylish = (arrOfDiff, spaces = 0) => {
+  let result = '';
+  result += '{\n';
+  arrOfDiff = arrOfDiff.sort((a, b) => a.key.localeCompare(b.key));
+  arrOfDiff.map(({prefix, key, value}) => {
+    if (Array.isArray(value)) {
+      const res = stylish(value, spaces + 1);
+      result += `${'    '.repeat(spaces)}${prefix}${key}:${res === '' ? '' : ' '}${res}\n`;
+    } else {
+      result += `${'    '.repeat(spaces)}${prefix}${key}:${value === '' ? '' : ' '}${value}\n`;
+    }
+  });
+  result += `${'    '.repeat(spaces)}}`;
+  return result;
+};
+//console.log(stylish(arrOfDiff));
+ */
