@@ -2200,13 +2200,13 @@ const makeStructure = (obj) => {
 
 const getAllEntries = (arr) => {
   const result = [];
-  const pushAllEntries = (arr, path = '') => {
+  const pushAllEntries = (arr, path = '', level = 1) => {
     arr.forEach(({key, value}) => {
       if (!Array.isArray(value)) {
-        result.push({key, value, hasChild: false, path: path === '' ? key : `${path}.${key}`})
+        result.push({key, value, hasChild: false, path: path === '' ? key : `${path}.${key}`, level: level, parent: path})
       } else {
-        result.push({key, value, hasChild: true, path: path === '' ? key : `${path}.${key}`})
-        pushAllEntries(value, path === '' ? key : `${path}.${key}`)
+        result.push({key, value, hasChild: true, path: path === '' ? key : `${path}.${key}`, level: level, parent: path})
+        pushAllEntries(value, path === '' ? key : `${path}.${key}`, level + 1)
       }
     })
   };
@@ -2303,7 +2303,7 @@ const sortedDiffWithParentStatus = sortedDiff.map((obj) => {
   return {...obj, parentSameStatus: getParentStatus(obj, sortedDiff) === obj.status, wasParentUpdated: getParentStatus(obj, sortedDiff) === 'updated'};
 })
 
-//console.log(sortedDiffWithParentStatus);
+console.log(sortedDiffWithParentStatus)
 
 //plain formatter
 
@@ -2332,5 +2332,52 @@ filtred.forEach((obj) => {
   }
 })
 
-console.log(result)
+//console.log(result)
 
+//stylish formatter
+
+const collapseEntries = (arr, parent = '') => {
+  const result = [];
+  arr.forEach((obj) => {
+    if (obj.parent === parent) {
+      result.push({...obj, children: collapseEntries(sortedDiffWithParentStatus, obj.path)});
+    }
+  })
+  return result;
+}
+
+const collapsed = collapseEntries(sortedDiffWithParentStatus);
+//console.log(collapsed[0])
+
+const getPrefix = (status, parentSameStatus, wasParentUpdated) => {
+  let result = '';
+  if (status === 'added' && parentSameStatus === false) {
+    result = '  + ';
+  } else if (status === 'deleted' && parentSameStatus === false && wasParentUpdated === false) {
+    result = '  - ';
+  } else if (status === 'changed' && wasParentUpdated === true) {
+    result = '    ';
+  } else if (status === 'deleted' && parentSameStatus === true && wasParentUpdated === false) {
+    result = '    ';
+  } else {
+    result = '    ';
+  }
+  return result;
+}
+
+const stylish = (arr, spaces = 0) => {
+  let result = '';
+  result += '{\n'
+  arr.forEach((obj) => {
+    if (obj.status === 'updated') {
+      result += `${'    '.repeat(spaces)}  - ${obj.key}: ${Array.isArray(obj.children) && obj.children.length !== 0 ? `${stylish(obj.children, spaces + 1)}` : `${obj.oldValue}`}\n`;
+      result += `${'    '.repeat(spaces)}  + ${obj.key}: ${Array.isArray(obj.value) && obj.value.length !== 0 ? `${stylish(obj.value, spaces + 1)}` : `${obj.value}`}\n`;
+    } else {
+      result += `${'    '.repeat(spaces)}${getPrefix(obj.status, obj.parentSameStatus, obj.wasParentUpdated)}${obj.key}: ${Array.isArray(obj.children) && obj.children.length !== 0 ? `${stylish(obj.children, spaces + 1)}` : `${obj.value}`}\n`;
+    }
+  })
+  result += `${'    '.repeat(spaces)}}`;
+  return result;
+}
+
+console.log(stylish(collapsed))
