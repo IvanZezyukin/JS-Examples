@@ -2121,263 +2121,270 @@ const stylish = (arrOfDiff, spaces = 0) => {
 //console.log(stylish(arrOfDiff));
  */
 
-const obj1 = {
-  "common": {
-    "setting1": "Value 1",
-    "setting2": 200,
-    "setting3": true,
-    "setting6": {
-      "key": "value",
-      "doge": {
-        "wow": ""
-      }
-    }
-  },
-  "group1": {
-    "baz": "bas",
-    "foo": "bar",
-    "nest": {
-      "key": "value"
-    }
-  },
-  "group2": {
-    "abc": 12345,
-    "deep": {
-      "id": 45
-    }
-  }
-}
-const obj2 = {
-  "common": {
-    "follow": false,
-    "setting1": "Value 1",
-    "setting3": null,
-    "setting4": "blah blah",
-    "setting5": {
-      "key5": "value5"
-    },
-    "setting6": {
-      "key": "value",
-      "ops": "vops",
-      "doge": {
-        "wow": "so much"
-      }
-    }
-  },
-  "group1": {
-    "foo": "bar",
-    "baz": "bars",
-    "nest": "str"
-  },
-  "group3": {
-    "deep": {
-      "id": {
-        "number": 45
-      }
-    },
-    "fee": 100500
-  }
-}
-const obj3 = {
-  setting1: 'Value 1',
-  setting2: 200,
-  setting3: true,
-  setting6: { key: 'value', doge: { wow: '' } }
-}
 
+//---------------------------------------------------------------------------------------------------------------------------
+// ниже реализация проекта 2 от хекслета, с двумя видами выходных данных
 
-const makeStructure = (obj) => {
-  const result = [];
-  Object.entries(obj).forEach(([key, value]) => {
-    if (typeof value !== 'object' || value === null) {
-      result.push({ key, value: value });
-    } else {
-      result.push({ key, value: makeStructure(value) });
-    }
-  });
-  return result;
-};
+// const obj1 = {
+//   "common": {
+//     "setting1": "Value 1",
+//     "setting2": 200,
+//     "setting3": true,
+//     "setting6": {
+//       "key": "value",
+//       "doge": {
+//         "wow": ""
+//       }
+//     }
+//   },
+//   "group1": {
+//     "baz": "bas",
+//     "foo": "bar",
+//     "nest": {
+//       "key": "value"
+//     }
+//   },
+//   "group2": {
+//     "abc": 12345,
+//     "deep": {
+//       "id": 45
+//     }
+//   }
+// }
+// const obj2 = {
+//   "common": {
+//     "follow": false,
+//     "setting1": "Value 1",
+//     "setting3": null,
+//     "setting4": "blah blah",
+//     "setting5": {
+//       "key5": "value5"
+//     },
+//     "setting6": {
+//       "key": "value",
+//       "ops": "vops",
+//       "doge": {
+//         "wow": "so much"
+//       }
+//     }
+//   },
+//   "group1": {
+//     "foo": "bar",
+//     "baz": "bars",
+//     "nest": "str"
+//   },
+//   "group3": {
+//     "deep": {
+//       "id": {
+//         "number": 45
+//       }
+//     },
+//     "fee": 100500
+//   }
+// }
+// const obj3 = {
+//   setting1: 'Value 1',
+//   setting2: 200,
+//   setting3: true,
+//   setting6: { key: 'value', doge: { wow: '' } }
+// }
 
-const getAllEntries = (arr) => {
-  const result = [];
-  const pushAllEntries = (arr, path = '', level = 1) => {
-    arr.forEach(({key, value}) => {
-      if (!Array.isArray(value)) {
-        result.push({key, value, hasChild: false, path: path === '' ? key : `${path}.${key}`, level: level, parent: path})
-      } else {
-        result.push({key, value, hasChild: true, path: path === '' ? key : `${path}.${key}`, level: level, parent: path})
-        pushAllEntries(value, path === '' ? key : `${path}.${key}`, level + 1)
-      }
-    })
-  };
-  pushAllEntries(arr);
-  return result;
-}
+// const makeStructure = (obj) => {
+//   const result = [];
+//   Object.entries(obj).forEach(([key, value]) => {
+//     if (typeof value !== 'object' || value === null) {
+//       result.push({ key, value: value });
+//     } else {
+//       result.push({ key, value: makeStructure(value) });
+//     }
+//   });
+//   return result;
+// };
 
-const ifInArrayObjectWithPathValue = (arr, pathValue) => {
-  let result = false;
-  arr.forEach((obj) => {
-    if (obj.path === pathValue) {
-      result = true;
-    }
-  })
-  return result;
-}
+// const getAllEntries = (arr) => {
+//   const result = [];
+//   const pushAllEntries = (arr, path = '', level = 1) => {
+//     arr.forEach(({key, value}) => {
+//       if (!Array.isArray(value)) {
+//         result.push({key, value, hasChild: false, path: path === '' ? key : `${path}.${key}`, level: level, parent: path})
+//       } else {
+//         result.push({key, value, hasChild: true, path: path === '' ? key : `${path}.${key}`, level: level, parent: path})
+//         pushAllEntries(value, path === '' ? key : `${path}.${key}`, level + 1)
+//       }
+//     })
+//   };
+//   pushAllEntries(arr);
+//   return result;
+// }
 
-const getDeleted = (arr1, arr2) => {
-  const result = [];
-  arr1.forEach((obj) => {
-    if (!ifInArrayObjectWithPathValue(arr2, obj.path)) {
-      result.push({...obj, status: 'deleted'})
-    }
-  })
-  return result;
-}
+// сравнение
 
-const getParentStatus = (obj, arr) => {
-  const indexOfLastDot = obj.path.lastIndexOf('.');
-  const path = obj.path.slice(0, indexOfLastDot);
-  const parent = getObjectFromArrayWithPathValue(arr, path);
-  return parent.status;
-}
+// const ifInArrayObjectWithPathValue = (arr, pathValue) => {
+//   let result = false;
+//   arr.forEach((obj) => {
+//     if (obj.path === pathValue) {
+//       result = true;
+//     }
+//   })
+//   return result;
+// }
 
-const getAdded = (arr1, arr2) => {
-  const result = [];
-  arr2.forEach((obj) => {
-    if (!ifInArrayObjectWithPathValue(arr1, obj.path)) {
-      result.push({...obj, status: 'added'})
-    }
-  })
-  return result;
-}
+// const getDeleted = (arr1, arr2) => {
+//   const result = [];
+//   arr1.forEach((obj) => {
+//     if (!ifInArrayObjectWithPathValue(arr2, obj.path)) {
+//       result.push({...obj, status: 'deleted'})
+//     }
+//   })
+//   return result;
+// }
 
-const getObjectFromArrayWithPathValue = (arr, pathValue) => {
-  const result = {};
-  arr.forEach((obj) => {
-    if (obj.path === pathValue) {
-      Object.assign(result, obj);
-    }
-  })
-  return result;
-}
+// const getParentStatus = (obj, arr) => {
+//   const indexOfLastDot = obj.path.lastIndexOf('.');
+//   const path = obj.path.slice(0, indexOfLastDot);
+//   const parent = getObjectFromArrayWithPathValue(arr, path);
+//   return parent.status;
+// }
 
-const getUpdated = (arr1, arr2) => {
-  const result = [];
-  arr1.forEach((obj) => {
-    const obj2 = getObjectFromArrayWithPathValue(arr2, obj.path);
-    if (Object.keys(obj2).length !== 0 && !Array.isArray(obj2.value) && obj.value !== obj2.value) {
-      result.push({...obj2, status: 'updated', oldValue: obj.value});
-    }
-  })
-  return result;
-}
+// const getAdded = (arr1, arr2) => {
+//   const result = [];
+//   arr2.forEach((obj) => {
+//     if (!ifInArrayObjectWithPathValue(arr1, obj.path)) {
+//       result.push({...obj, status: 'added'})
+//     }
+//   })
+//   return result;
+// }
 
-const getTheSame = (arr1, arr2) => {
-  const result = [];
-  arr1.forEach((obj) => {
-    const obj2 = getObjectFromArrayWithPathValue(arr2, obj.path);
-    if (Object.keys(obj2).length !== 0 && Array.isArray(obj2.value) && Array.isArray(obj.value)) {
-      result.push({...obj, status: 'same'});
-    }
-    if (Object.keys(obj2).length !== 0 && !Array.isArray(obj2.value) && !Array.isArray(obj.value) && obj2.value === obj.value) {
-      result.push({...obj, status: 'same'});
-    }
-  })
-  return result;
-}
+// const getObjectFromArrayWithPathValue = (arr, pathValue) => {
+//   const result = {};
+//   arr.forEach((obj) => {
+//     if (obj.path === pathValue) {
+//       Object.assign(result, obj);
+//     }
+//   })
+//   return result;
+// }
 
-const newStructure1 = makeStructure(obj1);
-const newStructure2 = makeStructure(obj2);
-const allEntries1 = getAllEntries(newStructure1);
-const allEntries2 = getAllEntries(newStructure2);
+// const getUpdated = (arr1, arr2) => {
+//   const result = [];
+//   arr1.forEach((obj) => {
+//     const obj2 = getObjectFromArrayWithPathValue(arr2, obj.path);
+//     if (Object.keys(obj2).length !== 0 && !Array.isArray(obj2.value) && obj.value !== obj2.value) {
+//       result.push({...obj2, status: 'updated', oldValue: obj.value});
+//     }
+//   })
+//   return result;
+// }
 
-const deleted = getDeleted(allEntries1, allEntries2);
-const added = getAdded(allEntries1, allEntries2);
-const updated = getUpdated(allEntries1, allEntries2);
-const same = getTheSame(allEntries1, allEntries2)
-const diff = [...deleted, ...added, ...updated, ...same];
+// const getTheSame = (arr1, arr2) => {
+//   const result = [];
+//   arr1.forEach((obj) => {
+//     const obj2 = getObjectFromArrayWithPathValue(arr2, obj.path);
+//     if (Object.keys(obj2).length !== 0 && Array.isArray(obj2.value) && Array.isArray(obj.value)) {
+//       result.push({...obj, status: 'same'});
+//     }
+//     if (Object.keys(obj2).length !== 0 && !Array.isArray(obj2.value) && !Array.isArray(obj.value) && obj2.value === obj.value) {
+//       result.push({...obj, status: 'same'});
+//     }
+//   })
+//   return result;
+// }
 
-const sortedDiff = diff.sort((a, b) => a.path.localeCompare(b.path));
+// const newStructure1 = makeStructure(obj1);
+// const newStructure2 = makeStructure(obj2);
+// const allEntries1 = getAllEntries(newStructure1);
+// const allEntries2 = getAllEntries(newStructure2);
 
-const sortedDiffWithParentStatus = sortedDiff.map((obj) => {
-  return {...obj, parentSameStatus: getParentStatus(obj, sortedDiff) === obj.status, wasParentUpdated: getParentStatus(obj, sortedDiff) === 'updated'};
-})
+// const deleted = getDeleted(allEntries1, allEntries2);
+// const added = getAdded(allEntries1, allEntries2);
+// const updated = getUpdated(allEntries1, allEntries2);
+// const same = getTheSame(allEntries1, allEntries2)
+// const diff = [...deleted, ...added, ...updated, ...same];
 
-console.log(sortedDiffWithParentStatus)
+// const sortedDiff = diff.sort((a, b) => a.path.localeCompare(b.path));
+
+// const sortedDiffWithParentStatus = sortedDiff.map((obj) => {
+//   return {...obj, parentSameStatus: getParentStatus(obj, sortedDiff) === obj.status, wasParentUpdated: getParentStatus(obj, sortedDiff) === 'updated'};
+// })
+
+// console.log(sortedDiffWithParentStatus)
 
 //plain formatter
 
-const getValue = (value) => {
-  let result = value;
-  if (Array.isArray(value)) {
-    result = `[complex value]`;
-  }
-  if (typeof value === 'string') {
-    result = `'${value}'`;
-  }
-  return result;
-}
+// const getValue = (value) => {
+//   let result = value;
+//   if (Array.isArray(value)) {
+//     result = `[complex value]`;
+//   }
+//   if (typeof value === 'string') {
+//     result = `'${value}'`;
+//   }
+//   return result;
+// }
 
-const filtred = sortedDiffWithParentStatus.filter((obj) => obj.status === 'added' || obj.status === 'deleted' || obj.status === 'updated')
-let result = '';
-filtred.forEach((obj) => {
-  if (obj.status === 'added' && obj.parentSameStatus === false) {
-    result += `Property '${obj.path}' was added with value: ${getValue(obj.value)}\n`
-  }
-  if (obj.status === 'deleted' && obj.parentSameStatus === false && obj.wasParentUpdated === false) {
-    result += `Property '${obj.path}' was removed\n`
-  }
-  if (obj.status === 'updated' && obj.parentSameStatus === false) {
-    result += `Property '${obj.path}' was updated. From ${getValue(obj.oldValue)} to ${getValue(obj.value)}\n`
-  }
-})
+// const filtred = sortedDiffWithParentStatus.filter((obj) => obj.status === 'added' || obj.status === 'deleted' || obj.status === 'updated')
+// let result = '';
+// filtred.forEach((obj) => {
+//   if (obj.status === 'added' && obj.parentSameStatus === false) {
+//     result += `Property '${obj.path}' was added with value: ${getValue(obj.value)}\n`
+//   }
+//   if (obj.status === 'deleted' && obj.parentSameStatus === false && obj.wasParentUpdated === false) {
+//     result += `Property '${obj.path}' was removed\n`
+//   }
+//   if (obj.status === 'updated' && obj.parentSameStatus === false) {
+//     result += `Property '${obj.path}' was updated. From ${getValue(obj.oldValue)} to ${getValue(obj.value)}\n`
+//   }
+// })
 
 //console.log(result)
 
 //stylish formatter
 
-const collapseEntries = (arr, parent = '') => {
-  const result = [];
-  arr.forEach((obj) => {
-    if (obj.parent === parent) {
-      result.push({...obj, children: collapseEntries(sortedDiffWithParentStatus, obj.path)});
-    }
-  })
-  return result;
-}
+// const collapseEntries = (arr, parent = '') => {
+//   const result = [];
+//   arr.forEach((obj) => {
+//     if (obj.parent === parent) {
+//       result.push({...obj, children: collapseEntries(sortedDiffWithParentStatus, obj.path)});
+//     }
+//   })
+//   return result;
+// }
 
-const collapsed = collapseEntries(sortedDiffWithParentStatus);
+// const collapsed = collapseEntries(sortedDiffWithParentStatus);
 //console.log(collapsed[0])
 
-const getPrefix = (status, parentSameStatus, wasParentUpdated) => {
-  let result = '';
-  if (status === 'added' && parentSameStatus === false) {
-    result = '  + ';
-  } else if (status === 'deleted' && parentSameStatus === false && wasParentUpdated === false) {
-    result = '  - ';
-  } else if (status === 'changed' && wasParentUpdated === true) {
-    result = '    ';
-  } else if (status === 'deleted' && parentSameStatus === true && wasParentUpdated === false) {
-    result = '    ';
-  } else {
-    result = '    ';
-  }
-  return result;
-}
+// const getPrefix = (status, parentSameStatus, wasParentUpdated) => {
+//   let result = '';
+//   if (status === 'added' && parentSameStatus === false) {
+//     result = '  + ';
+//   } else if (status === 'deleted' && parentSameStatus === false && wasParentUpdated === false) {
+//     result = '  - ';
+//   } else if (status === 'changed' && wasParentUpdated === true) {
+//     result = '    ';
+//   } else if (status === 'deleted' && parentSameStatus === true && wasParentUpdated === false) {
+//     result = '    ';
+//   } else {
+//     result = '    ';
+//   }
+//   return result;
+// }
 
-const stylish = (arr, spaces = 0) => {
-  let result = '';
-  result += '{\n'
-  arr.forEach((obj) => {
-    if (obj.status === 'updated') {
-      result += `${'    '.repeat(spaces)}  - ${obj.key}: ${Array.isArray(obj.children) && obj.children.length !== 0 ? `${stylish(obj.children, spaces + 1)}` : `${obj.oldValue}`}\n`;
-      result += `${'    '.repeat(spaces)}  + ${obj.key}: ${Array.isArray(obj.value) && obj.value.length !== 0 ? `${stylish(obj.value, spaces + 1)}` : `${obj.value}`}\n`;
-    } else {
-      result += `${'    '.repeat(spaces)}${getPrefix(obj.status, obj.parentSameStatus, obj.wasParentUpdated)}${obj.key}: ${Array.isArray(obj.children) && obj.children.length !== 0 ? `${stylish(obj.children, spaces + 1)}` : `${obj.value}`}\n`;
-    }
-  })
-  result += `${'    '.repeat(spaces)}}`;
-  return result;
-}
+// const stylish = (arr, spaces = 0) => {
+//   let result = '';
+//   result += '{\n'
+//   arr.forEach((obj) => {
+//     if (obj.status === 'updated') {
+//       result += `${'    '.repeat(spaces)}  - ${obj.key}: ${Array.isArray(obj.children) && obj.children.length !== 0 ? `${stylish(obj.children, spaces + 1)}` : `${obj.oldValue}`}\n`;
+//       result += `${'    '.repeat(spaces)}  + ${obj.key}: ${Array.isArray(obj.value) && obj.value.length !== 0 ? `${stylish(obj.value, spaces + 1)}` : `${obj.value}`}\n`;
+//     } else {
+//       result += `${'    '.repeat(spaces)}${getPrefix(obj.status, obj.parentSameStatus, obj.wasParentUpdated)}${obj.key}: ${Array.isArray(obj.children) && obj.children.length !== 0 ? `${stylish(obj.children, spaces + 1)}` : `${obj.value}`}\n`;
+//     }
+//   })
+//   result += `${'    '.repeat(spaces)}}`;
+//   return result;
+// }
+//
+// console.log(stylish(collapsed))
 
-console.log(stylish(collapsed))
+//---------------------------------------------------------------------------------------------------------------------------
