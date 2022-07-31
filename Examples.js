@@ -2022,3 +2022,44 @@ const cloneDeep = (object) => {
     return clonedObject;
 }
  */
+
+/*
+// контекст, инкапсуляция, объект, метод, метод в объекте
+const make = (numer, denom) => {
+    const obj = {
+        numer,
+        denom,
+      setNumer(numer) {
+        this.numer = numer;
+      },
+      setDenom(denom) {
+        this.denom = denom;
+      },
+      getNumer() {
+        return this.numer;
+      },
+      getDenom() {
+        return this.denom;
+      },
+      add(obj) {
+        const numer = this.numer * obj.denom + this.denom * obj.numer;
+        const denom = this.denom * obj.denom;
+        return make(numer, denom);
+      },
+      toString() {
+        return `${this.numer}/${this.denom}`;
+      }
+    };
+    return obj;
+}
+const rat1 = make(3, 8);
+console.log(rat1)
+console.log(rat1.getNumer())
+console.log(rat1.getDenom())
+console.log(rat1.toString())
+const rat2 = make();
+rat2.setNumer(10);
+rat2.setDenom(3);
+console.log(rat2);
+*/
+
