@@ -2063,3 +2063,32 @@ rat2.setDenom(3);
 console.log(rat2);
 */
 
+/*
+// игры с контекстом
+
+const obj = { number: 5 };
+const fn = function fn(number) {
+  return number + this.number;
+};
+const fn2 = function fn(number1, number2) {
+    return number1 + this.number - number2;
+};
+
+const binder = (obj, fn) => {
+    obj.func = fn;
+    //return (args) => obj.func(args);
+    //return (args) => obj.func.call(obj, args)
+    return function () {
+        return obj.func.call(obj, ...arguments)
+    }
+}
+
+const fnWithContext = binder(obj, fn2);
+
+console.log(fnWithContext(3, 1))
+
+function func1() {
+    console.log(...arguments);
+  }
+//func1(1, 2)
+*/
