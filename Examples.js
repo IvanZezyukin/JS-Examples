@@ -2118,3 +2118,18 @@ function reverse(segment) {
   const segment = new Segment(point1, point2);
   const reversedSegment = reverse(segment);
 */
+
+/*
+// магическая функция
+const magic = (...numbers) => {
+    const sum = numbers.reduce((acc, x) => (x + acc), 0);
+    const inner = (...rest) => magic(sum, ...rest);
+    // функции - это объекты, что позволяет для "магического" метода установить свою функцию
+    inner.valueOf = () => sum; // метод вызывается при сравнении, поэтому он возвращает только результат
+    // подробнее о valueOf: https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Object/valueOf
+    return inner;
+  };
+ console.log(magic(2,3))
+ */
+
+ 
