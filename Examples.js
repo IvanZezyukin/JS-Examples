@@ -2092,3 +2092,29 @@ function func1() {
   }
 //func1(1, 2)
 */
+
+
+/*
+//конструктор
+
+import Point from './Point.js';
+import Segment from './Segment.js';
+
+function reverse(segment) {
+    const beginPoint = segment.getBeginPoint();
+    const endPoint = segment.getEngPoint();
+    const beginX = beginPoint.getX();
+    const beginY = beginPoint.getY();
+    const endX = endPoint.getX();
+    const endY = endPoint.getY();
+    const newBegin = new Point(endX, endY);
+    const newEnd = new Point(beginX, beginY);
+    const reversedSegment = new Segment(newBegin, newEnd);
+    return reversedSegment;
+}
+
+  const point1 = new Point(1, 10);
+  const point2 = new Point(11, -3);
+  const segment = new Segment(point1, point2);
+  const reversedSegment = reverse(segment);
+*/
