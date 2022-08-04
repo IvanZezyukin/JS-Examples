@@ -2164,4 +2164,24 @@ const magic = (...numbers) => {
   const url = new Url('http://yandex.ru:80?key=value&key2=value2');
   console.log(url.equals(new Url('http://yandex.ru:80?key=value')));
   */
- 
+
+  /*
+  // reduce + map + filter + sort
+  export default (data) => data
+  .map(({ name, country }) => ({ city: name.toLowerCase(), country: country.toLowerCase() }))
+  .map(({ city, country }) => ({ city: city.trim(), country: country.trim() }))
+  .map(({ city, country }) => [country, city])
+  .sort() // sort countries and cities
+  .reduce((acc, [country, city]) => {
+    const citiesAcc = acc[country] ?? [];
+    const cities = citiesAcc.concat(city);
+    const uniqueCities = new Set(cities);
+    return { ...acc, [country]: [...uniqueCities] };
+  }, {});
+  const countries = [
+    { name: 'Miami', country: 'usa' },
+    { name: 'samarA', country: '  ruSsiA' },
+    { name: 'Moscow ', country: ' Russia' },
+  ];
+  console.log(normalize(countries));
+  */
