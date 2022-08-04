@@ -2132,4 +2132,36 @@ const magic = (...numbers) => {
  console.log(magic(2,3))
  */
 
+/*
+ // класс обертка над url
+ class Url {
+    constructor(adress) {
+      this.adress = new URL(adress);
+    }
+    getScheme() {
+        return this.adress.protocol.slice(0, -1);
+    }
+    getHostName() {
+        return this.adress.hostname;
+    }
+    getQueryParams() {
+        const queryParams = new URLSearchParams(this.adress.searchParams);
+        return Object.fromEntries(queryParams.entries());
+    }
+    getQueryParam(key, value = null) {
+        const queryParams = new URLSearchParams(this.adress.searchParams);
+        const objQueryParams = Object.fromEntries(queryParams.entries());
+        return objQueryParams[key] ?? value;
+    }
+    equals(url) {
+        if (this.adress.href === url.adress.href) {
+            return true;
+        }
+        return false;
+    }
+  }
+
+  const url = new Url('http://yandex.ru:80?key=value&key2=value2');
+  console.log(url.equals(new Url('http://yandex.ru:80?key=value')));
+  */
  
